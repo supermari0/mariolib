@@ -1,0 +1,12 @@
+- Move config here, add bashrc after consolidating from various machines
+- Python
+    - web app / api skeleton
+    - unit test skeleton (or not, really not hard with unittest in python)
+    - file reading and parsing for common formats (json, csv, etc)
+    - maybe some simple frontend templates
+    - external http api calls with good response handling
+    - small Dockerfile
+    - common dependencies you may want to pull in
+    - async setup
+    - empty classes with __init__ and whatnot (just to save typing)
+    - standard lib quick reference
