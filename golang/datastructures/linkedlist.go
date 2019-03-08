@@ -1,5 +1,4 @@
-// Package linkedlist contains linked lists and operations on them
-package linkedlist
+package datastructures
 
 // Linked list interfaces
 type Node interface {
