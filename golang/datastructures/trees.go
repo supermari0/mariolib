@@ -1,52 +1,65 @@
 package datastructures
 
-type TreeNode interface {
-    TreeNodeValue() interface{}
+type BinaryTree interface {
+    GetTreeNodeValue() interface{}
     // []TreeNode slice is a pointer to the underlying array, so we don't have
     // to return a reference to the slice itself
-    TreeChildren() []*TreeNode
+    GetTreeChildren() []*BinaryTree
+    GetLeftChild() *BinaryTree
+    GetRightChild() *BinaryTree
+    SetLeftChild(*BinaryTree)
+    SetRightChild(*BinaryTree)
 }
 
-type GenericTree struct {
+type GenericBinaryTree struct {
     V interface{}
-    Children []*GenericTree
+    LeftChild *GenericBinaryTree
+    RightChild *GenericBinaryTree
 }
 
-func (t *GenericTree) TreeNodeValue() interface{} {
+func (t *GenericBinaryTree) GetTreeNodeValue() interface{} {
     return t.V
 }
 
-func (t *GenericTree) TreeChildren() []*GenericTree {
-    return t.Children
+func (t *GenericBinaryTree) GetTreeChildren() []*GenericBinaryTree {
+    childrenSlice := make([]*GenericBinaryTree, 2, 2)
+    childrenSlice[0] = t.LeftChild
+    childrenSlice[1] = t.RightChild
+    return childrenSlice
 }
 
-// Note: This can be rewritten with AddNChild
-func (t *GenericTree) AddLeftChild(child *GenericTree) {
-    t.AddNChild(0, child)
-    /* Old implementation - rewrote with AddNChild
-    childSlice := make([]*GenericTree, 1)
-    childSlice[0] = child
-    newChildren := append(childSlice, t.Children...)
-    t.Children = newChildren */
+func (t *GenericBinaryTree) GetLeftChild() *GenericBinaryTree {
+    return t.LeftChild
 }
 
-func (t *GenericTree) AddRightChild(child *GenericTree) {
-    // TODO Initialize an empty tree correctly
-    newChildren := append(t.Children, child)
-    t.Children = newChildren
+func (t *GenericBinaryTree) GetRightChild() *GenericBinaryTree {
+    return t.RightChild
 }
 
-// Insert a child in position i in the tree.
-// If the position requested is larger than the current number of children, the
-// child is added in the last position.
-func (t *GenericTree) AddNChild(i uint, child *GenericTree) {
-    if i > uint(len(t.Children)) {
-        t.AddRightChild(child)
-        return
+func (t *GenericBinaryTree) SetLeftChild(c *GenericBinaryTree) {
+    t.LeftChild = c
+}
+
+func (t *GenericBinaryTree) SetRightChild(c *GenericBinaryTree) {
+    t.RightChild = c
+}
+
+// Perform a depth-first search of the tree, starting with the left side.
+// Return a pointer to the subtree whose root is the value we're searching for.
+func (t *GenericBinaryTree) DepthFirstSearch(v interface{}) *GenericBinaryTree {
+    if t.V == v {
+        return t
     }
-    // TODO Bounds checking? Also, initialize an empty tree correctly
-    previousChildren := t.Children[0:i]
-    nextChildren := t.Children[i+1:]
-    newChildren := append(previousChildren, child, nextChildren...)
-    t.Children = newChildren
+    if t.LeftChild != nil {
+        result := t.LeftChild.DepthFirstSearch(v)
+        if result != nil {
+            return result
+        }
+    }
+    if t.RightChild != nil {
+        return t.RightChild.DepthFirstSearch(v)
+    }
+    return nil
 }
+
+// TODO: BFS with queue, rotate, sorted tree, balanced tree
