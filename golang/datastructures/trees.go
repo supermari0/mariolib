@@ -47,7 +47,7 @@ func (t *GenericBinaryTree) SetRightChild(c *GenericBinaryTree) {
 // Perform a depth-first search of the tree, starting with the left side.
 // Return a pointer to the subtree whose root is the value we're searching for.
 func (t *GenericBinaryTree) DepthFirstSearch(v interface{}) *GenericBinaryTree {
-    if t.V == v {
+    if t.GetTreeNodeValue() == v {
         return t
     }
     if t.LeftChild != nil {
@@ -62,4 +62,22 @@ func (t *GenericBinaryTree) DepthFirstSearch(v interface{}) *GenericBinaryTree {
     return nil
 }
 
-// TODO: BFS with queue, rotate, sorted tree, balanced tree
+// Perform a breadth-first search of the tree.
+// Return a pointer to the subtree whose root is the value we're searching for.
+func (t *GenericBinaryTree) BreadthFirstSearch(v interface{}) *GenericBinaryTree {
+    // TODO After implementing a real queue, use that here
+    queue := make(chan *GenericBinaryTree)
+    queue <- t
+    for {
+        subtree, ok := <-queue
+        if !ok { return nil }
+        if subtree.GetTreeNodeValue() == v { return subtree }
+
+        children := subtree.GetTreeChildren()
+        for i := 0; i < len(children); i++ {
+            queue <- children[i]
+        }
+    }
+}
+
+// TODO: rotate, sorted tree, balanced tree
